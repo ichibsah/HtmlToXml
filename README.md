@@ -9,7 +9,7 @@ Placeholders
 Format
 ------
 
-The placeholders are regex expression encased in {{}} or [[]].
+The placeholders are xpath expression encased in {{}} or [[]].
 
 {{}} returns the outer html.
 
