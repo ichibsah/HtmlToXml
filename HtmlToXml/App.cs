@@ -22,8 +22,8 @@ namespace HtmlToXml
         {
             InitializeComponent();
 
-            this.textBoxSourceHtmlFolder.Text = @"D:\Documents\Documents\Visual Studio 2010\Projects\HtmlToXml\HtmlToXml\HtmlToXml\bin\Debug\samples";
-            this.textBoxDestinationXmlFolder.Text = @"D:\Documents\Documents\Visual Studio 2010\Projects\HtmlToXml\HtmlToXml\HtmlToXml\bin\Debug\samples";
+            //this.textBoxSourceHtmlFolder.Text = @"D:\Documents\Documents\Visual Studio 2010\Projects\HtmlToXml\HtmlToXml\HtmlToXml\bin\Debug\samples";
+            //this.textBoxDestinationXmlFolder.Text = @"D:\Documents\Documents\Visual Studio 2010\Projects\HtmlToXml\HtmlToXml\HtmlToXml\bin\Debug\samples";
         }
 
         private bool IsValidOption(ref TextBox InputTextBox, ref Color DefaultTextBoxBackColor)
