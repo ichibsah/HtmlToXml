@@ -9,5 +9,14 @@ Placeholders
 Format
 ------
 
-The placeholders are either encased in {{}} or [[]].
+The placeholders are regex expression encased in {{}} or [[]].
 
+{{}} returns the inner html.
+
+[[]] returns the outer html.
+
+For example, in a HTML with <title>Web Page Title</title>
+
+{{//title}} returns Web Page Title 
+
+[[//title]] returns <title>Web Page Title</title>
