@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xml>
+  <title>{{//title}}</title>
+  <header></header>
+  <body>
+    <head>
+      {{//title}}
+      <div>
+        [[//title]]
+      </div>
+    </head>
+  </body>
+  <filename>{{filename}}</filename>
+</xml>
