@@ -20,6 +20,11 @@ For example, in a HTML with <title>Web Page Title</title>
 
 {{//title}} returns Web Page Title 
 
-
 [[//title]] returns <title>Web Page Title</title>
 ```
+
+Reserved Placeholders
+---------------------
+{{filename}} returns the html file name
+
+{{filepath}} returns the html file path
