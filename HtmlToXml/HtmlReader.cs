@@ -46,8 +46,9 @@ class HtmlReader
         TidyDocObj.Quiet = true;
         TidyDocObj.ForceOutput = true;
         TidyDocObj.CleanAndRepair();
-
-        return TidyDocObj.Save();
+        string TidyHtml = TidyDocObj.Save();
+        TidyDocObj.Dispose();
+        return TidyHtml;
     }
 
     private HtmlNodeCollection GetHtmlContents(string XpathExpression)
