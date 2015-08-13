@@ -21,10 +21,6 @@ namespace HtmlToXml
         public App()
         {
             InitializeComponent();
-
-			this.textBoxSourceHtmlFolder.Text = @"D:\Documents\Documents\GitHub\HtmlToXml\HtmlToXml\bin\Release\input";
-			this.textBoxXmlTemplate.Text = @"D:\Documents\Documents\GitHub\HtmlToXml\HtmlToXml\bin\Release\output\sample_template.xml";
-			this.textBoxDestinationXmlFolder.Text = @"D:\Documents\Documents\GitHub\HtmlToXml\HtmlToXml\bin\Release\final";
         }
 
         private bool IsValidOption(ref TextBox InputTextBox, ref Color DefaultTextBoxBackColor)
