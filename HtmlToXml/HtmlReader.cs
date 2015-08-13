@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using HtmlAgilityPack;
+using System.Collections;
 
 class HtmlReader
 {
@@ -28,15 +29,34 @@ class HtmlReader
         if (!File.Exists(FullFilePath))
             return false;
 
+		string HTML = "";
+		//HTML = this.TidyHtml(FullFilePath);
+		HTML = this.LoadFile(FullFilePath);
+
         this._FullFilePath = FullFilePath;
 
         this._LoadedHtmlDoc = new HtmlDocument();
         this._LoadedHtmlDoc.OptionFixNestedTags = true;
         this._LoadedHtmlDoc.OptionAutoCloseOnEnd = true;
-        this._LoadedHtmlDoc.LoadHtml(this.TidyHtml(FullFilePath));
+		this._LoadedHtmlDoc.LoadHtml(HTML);
 
         return true;
     }
+
+	private string LoadFile(string FullFilePath)
+	{
+		FileStream FileContentStream = File.Open(FullFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+		StreamReader FileContentReader = new StreamReader(FileContentStream);
+
+		string FileContent = "";
+		FileContent = FileContentReader.ReadToEnd();
+
+		//  clean up
+		FileContentReader.Close();
+		FileContentStream.Close();
+
+		return FileContent;
+	}
 
     private string TidyHtml(string FullFilePath)
     {
@@ -47,11 +67,14 @@ class HtmlReader
         TidyDocObj.ForceOutput = true;
         TidyDocObj.CleanAndRepair();
 
-        return TidyDocObj.Save();
+        string TidyHtml = TidyDocObj.Save();
+		TidyDocObj.Dispose();
+		return TidyHtml;
     }
 
     private HtmlNodeCollection GetHtmlContents(string XpathExpression)
     {
+		
         return this._LoadedHtmlDoc.DocumentNode.SelectNodes(XpathExpression);
     }
 
@@ -62,13 +85,61 @@ class HtmlReader
         if (string.IsNullOrEmpty(XpathExpression))
             return retHtml;
 
-        foreach (HtmlNode FoundNode in this.GetHtmlContents(XpathExpression))
+		HtmlNodeCollection FoundNodes = this.GetHtmlContents(XpathExpression);
+
+		if (FoundNodes == null)
+			return retHtml;
+
+		foreach (HtmlNode FoundNode in FoundNodes)
         {
             retHtml += FoundNode.InnerHtml;
         }
 
         return retHtml;
     }
+
+	public string GetCSVInnerHtmlContent(string XpathExpression)
+	{
+		string retHtml = "";
+		ArrayList ItemsArray = new ArrayList();
+
+		if (string.IsNullOrEmpty(XpathExpression))
+			return retHtml;
+
+		HtmlNodeCollection FoundNodes = this.GetHtmlContents(XpathExpression);
+
+		if (FoundNodes == null)
+			return retHtml;
+
+		foreach (HtmlNode FoundNode in FoundNodes)
+		{
+			ItemsArray.Add(FoundNode.InnerHtml);
+		}
+
+		retHtml = String.Join(",", ItemsArray.ToArray());
+
+		return retHtml;
+	}
+
+	public string GetAttributeHtmlContent(string XpathExpression, string AttributeName)
+	{
+		string retHtml = "";
+
+		if (string.IsNullOrEmpty(XpathExpression))
+			return retHtml;
+
+		HtmlNodeCollection FoundNodes = this.GetHtmlContents(XpathExpression);
+
+		if (FoundNodes == null)
+			return retHtml;
+
+		foreach (HtmlNode FoundNode in FoundNodes)
+		{
+			retHtml += FoundNode.Attributes[AttributeName].Value;
+		}
+
+		return retHtml;
+	}
 
     public string GetOuterHtmlContent(string XpathExpression)
     {
@@ -77,7 +148,12 @@ class HtmlReader
         if (string.IsNullOrEmpty(XpathExpression))
             return retHtml;
 
-        foreach (HtmlNode FoundNode in this.GetHtmlContents(XpathExpression))
+		HtmlNodeCollection FoundNodes = this.GetHtmlContents(XpathExpression);
+
+		if (FoundNodes == null)
+			return retHtml;
+
+		foreach (HtmlNode FoundNode in FoundNodes)
         {
             retHtml += FoundNode.OuterHtml;
         }

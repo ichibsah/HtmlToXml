@@ -35,7 +35,6 @@ class XmlTemplateRW
 
     public void ExecutePlaceholderReplacement(HtmlReader LoadedHtmlReader)
     {
-
         XmlNodeList FoundNodes = _LoadedXmlDoc.DocumentElement.SelectNodes("//*");
         foreach (XmlNode FoundNode in FoundNodes)
         {
@@ -59,6 +58,8 @@ class XmlTemplateRW
     public void Save(string FullFilePath)
     {
         this._LoadedXmlDoc.Save(FullFilePath);
+		string[] lines = File.ReadAllLines(FullFilePath);
+		File.WriteAllLines(FullFilePath, lines);
     }
 
     private List<String> ParseForPlaceholder(XmlNode ParsableNode)
@@ -68,14 +69,8 @@ class XmlTemplateRW
         if (ParsableNode == null)
             return RetPlaceholdNames;
 
-        string InnerPlaceholderRegexPattern = @"{{.+?}}";
+        string InnerPlaceholderRegexPattern = @"{.+}";
         foreach (Match MatchedPlaceholder in Regex.Matches(ParsableNode.Value, InnerPlaceholderRegexPattern))
-        {
-            RetPlaceholdNames.Add(MatchedPlaceholder.Value);
-        }
-
-        string OuterPlaceholderRegexPattern = @"\[\[.+?\]\]";
-        foreach (Match MatchedPlaceholder in Regex.Matches(ParsableNode.Value, OuterPlaceholderRegexPattern))
         {
             RetPlaceholdNames.Add(MatchedPlaceholder.Value);
         }
@@ -96,16 +91,31 @@ class XmlTemplateRW
                 RetPlaceholderContent = Path.GetDirectoryName(LoadedHtmlReader.FullFilePath);
                 break;
             default:
-                string PlaceholderRegex = PlaceholderName.TrimStart(new char[] { '{', '[' }).TrimEnd(new char[] { '}', ']' });
-                if (PlaceholderName[0] == '{')
+                string PlaceholderRegex = PlaceholderName.TrimStart(new char[] { '{' }).TrimEnd(new char[] { '}' });
+                if (PlaceholderName.StartsWith("{{{"))
                 {
                     RetPlaceholderContent = LoadedHtmlReader.GetOuterHtmlContent(PlaceholderRegex);
                 }
-                else if (PlaceholderName[0] == '[')
-                {
-                    RetPlaceholderContent = LoadedHtmlReader.GetInnerHtmlContent(PlaceholderRegex);
-                }
-                
+				else if (PlaceholderName.StartsWith("{{"))
+				{
+					RetPlaceholderContent = LoadedHtmlReader.GetInnerHtmlContent(PlaceholderRegex);
+				}
+				else if (PlaceholderName.StartsWith("{"))
+				{
+					string[] PlaceholderRegexArray = PlaceholderRegex.Split(',');
+
+					if (PlaceholderRegexArray.Length == 1)
+					{
+						RetPlaceholderContent = LoadedHtmlReader.GetCSVInnerHtmlContent(PlaceholderRegexArray[0]);
+					}
+					else if (PlaceholderRegexArray.Length == 2)
+					{
+						RetPlaceholderContent = LoadedHtmlReader.GetAttributeHtmlContent(PlaceholderRegexArray[0], PlaceholderRegexArray[1]);
+
+						string[] RetPlaceholderContentArray = RetPlaceholderContent.Split('/');
+						RetPlaceholderContent = RetPlaceholderContentArray[RetPlaceholderContentArray.Length - 1];
+					}	
+				}
                 break;
         }
 
