@@ -124,6 +124,7 @@ class HtmlReader
 	public string GetAttributeHtmlContent(string XpathExpression, string AttributeName)
 	{
 		string retHtml = "";
+		ArrayList ItemsArray = new ArrayList();
 
 		if (string.IsNullOrEmpty(XpathExpression))
 			return retHtml;
@@ -135,8 +136,10 @@ class HtmlReader
 
 		foreach (HtmlNode FoundNode in FoundNodes)
 		{
-			retHtml += FoundNode.Attributes[AttributeName].Value;
+			ItemsArray.Add(FoundNode.Attributes[AttributeName].Value);
 		}
+
+		retHtml = String.Join(",", ItemsArray.ToArray());
 
 		return retHtml;
 	}

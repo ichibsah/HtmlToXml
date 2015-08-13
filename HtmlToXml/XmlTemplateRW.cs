@@ -112,8 +112,14 @@ class XmlTemplateRW
 					{
 						RetPlaceholderContent = LoadedHtmlReader.GetAttributeHtmlContent(PlaceholderRegexArray[0], PlaceholderRegexArray[1]);
 
-						string[] RetPlaceholderContentArray = RetPlaceholderContent.Split('/');
-						RetPlaceholderContent = RetPlaceholderContentArray[RetPlaceholderContentArray.Length - 1];
+
+						string[] RetPlaceholderContentArray = RetPlaceholderContent.Split(',');
+						for (int i = 0; i < RetPlaceholderContentArray.Length; i++)
+						{
+							RetPlaceholderContentArray[i] = Path.GetFileName(RetPlaceholderContentArray[i]);
+						}
+
+						RetPlaceholderContent = String.Join(",", RetPlaceholderContentArray);
 					}	
 				}
                 break;
