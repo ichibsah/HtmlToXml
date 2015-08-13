@@ -1,6 +1,8 @@
 HtmlToXml
 =========
 
+![Screen 1](https://raw.githubusercontent.com/jhuangsoftware/HtmlToXml/master/HtmlToXml/samples/screenshot1.png)
+
 Convert Html to Xml via user defined xml template.  The structure of the xml template will remain unchanged after conversion.  Only the placeholder specified will change.
 
 Placeholders
