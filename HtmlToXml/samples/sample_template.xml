@@ -6,7 +6,7 @@
     <head>
       {{//title}}
       <div>
-        [[//title]]
+        {{//title}}
       </div>
     </head>
   </body>
