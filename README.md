@@ -9,18 +9,29 @@ Placeholders
 Format
 ------
 
-The placeholders are xpath expression encased in {{}} or [[]].
+The placeholders are xpath expression encased in {{{}}}, {{}}, or {}.
 
-{{}} returns the outer html.
+{{{}}} returns the outer html.
 
-[[]] returns the inner html.
+{{}} returns the inner html.
+
+{} returns the content in comma separated form
+
+{xpath exression,attribute name} returns attribute value of the matched xpath expression
 
 ```
-For example, in a HTML with <title>Web Page Title</title>
+For example, in a HTML with
 
-{{//title}} returns <title>Web Page Title</title> 
+<div class="title">Web Page Title</div>
+<div class="body">Web Page Body</div>
 
-[[//title]] returns Web Page Title
+{{{//div[@class="title"]}}} returns <div class="title">Web Page Title</div>
+
+{{//div[@class="title"]}} returns Web Page Title
+
+{//div} returns Web Page Title,Web Page Body
+
+{//div[last()],class} returns body
 ```
 
 Reserved Placeholders
