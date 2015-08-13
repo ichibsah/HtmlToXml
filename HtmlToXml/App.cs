@@ -16,14 +16,15 @@ namespace HtmlToXml
         Color _textBoxXmlTemplate;
         Color _textBoxDestinationXmlFolder;
 
-        string _SupportedExtensions = "*.htm,*html";
+        string _SupportedExtensions = "*.htm,*.html";
 
         public App()
         {
             InitializeComponent();
 
-            //this.textBoxSourceHtmlFolder.Text = @"D:\Documents\Documents\Visual Studio 2010\Projects\HtmlToXml\HtmlToXml\HtmlToXml\bin\Debug\samples";
-            //this.textBoxDestinationXmlFolder.Text = @"D:\Documents\Documents\Visual Studio 2010\Projects\HtmlToXml\HtmlToXml\HtmlToXml\bin\Debug\samples";
+			this.textBoxSourceHtmlFolder.Text = @"D:\Documents\Documents\GitHub\HtmlToXml\HtmlToXml\bin\Release\input";
+			this.textBoxXmlTemplate.Text = @"D:\Documents\Documents\GitHub\HtmlToXml\HtmlToXml\bin\Release\output\sample_template.xml";
+			this.textBoxDestinationXmlFolder.Text = @"D:\Documents\Documents\GitHub\HtmlToXml\HtmlToXml\bin\Release\final";
         }
 
         private bool IsValidOption(ref TextBox InputTextBox, ref Color DefaultTextBoxBackColor)
@@ -94,24 +95,23 @@ namespace HtmlToXml
 
             this.buttonConvert.Enabled = false;
 
-            XmlTemplateRW XmlTemplateRWObj = new XmlTemplateRW();
-            XmlTemplateRWObj.LoadXmlTemplate(this.textBoxXmlTemplate.Text);
-
             IEnumerable<string> SupportFiles = Directory.GetFiles(this.textBoxSourceHtmlFolder.Text, "*.*", SearchOption.AllDirectories).Where(s => _SupportedExtensions.Contains(Path.GetExtension(s).ToLower()));
             progressBarStatus.Maximum = SupportFiles.Count();
             foreach (string ImportDataSourceFile in SupportFiles)
             {
-                HtmlReader HtmlReadObj = new HtmlReader();
-                if (HtmlReadObj.LoadHtml(ImportDataSourceFile))
-                {
-                    string ImportDataDestinationFile = this.textBoxDestinationXmlFolder.Text + "\\" + Path.GetFileName(ImportDataSourceFile) + ".xml";
+				XmlTemplateRW XmlTemplateRWObj = new XmlTemplateRW();
+				XmlTemplateRWObj.LoadXmlTemplate(this.textBoxXmlTemplate.Text);
+				HtmlReader HtmlReadObj = new HtmlReader();
+				if (HtmlReadObj.LoadHtml(ImportDataSourceFile))
+				{
+					string ImportDataDestinationFile = this.textBoxDestinationXmlFolder.Text + "\\" + Path.GetFileName(ImportDataSourceFile) + ".xml";
 
-                    XmlTemplateRWObj.ExecutePlaceholderReplacement(HtmlReadObj);
-                    XmlTemplateRWObj.Save(ImportDataDestinationFile);
-                }
+					XmlTemplateRWObj.ExecutePlaceholderReplacement(HtmlReadObj);
+					XmlTemplateRWObj.Save(ImportDataDestinationFile);
+				}
 
-                progressBarStatus.PerformStep();
-                Application.DoEvents();
+				progressBarStatus.PerformStep();
+				Application.DoEvents();
             }
 
             progressBarStatus.Value = 0;
